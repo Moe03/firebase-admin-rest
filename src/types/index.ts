@@ -13,7 +13,7 @@ export interface FirebaseAdminConfig {
     /**
      * The private key ID of the service account.
      */
-    private_key_id: string;
+    private_key_id?: string;
     /**
      * The private key of the service account.
      */
@@ -74,9 +74,17 @@ export interface FirestoreDocument {
  */
 export interface CompatibleDocument<T = any> {
     id: string,
-    exists: () => boolean
-    data?: () => T,
+    data: () => T,
     error?: any
+}
+
+export interface GetDocumentResponse<T = any> {
+    id: string,
+    exists: () => boolean,
+    data: () => T,
+    error?: any,
+    response?: Response,
+    jsonResponse?: object
 }
 
 /**
@@ -90,9 +98,19 @@ export interface CompatibleDocument<T = any> {
 export interface RestDocuments<T = any> {
     size: number;
     empty: boolean;
-    docs: T[];
-    /**
-     * Optional. Represents any error information in the response.
-     */
+    docs: CompatibleDocument<T>[];
     error?: any;
+    jsonResponse?: object;
 }
+
+export interface TypedEnv {
+    FIREBASE_REST_SERVICE_ACCOUNT: string;
+    FIREBASE_REST_ACCESS_TOKEN: string;
+    FIREBASE_REST_PROJECT_ID: string;
+    FIREBASE_REST_DATABASE_ID: string;
+    [key: string]: string;
+}
+
+export type WhereFilterOpREST = "EQUAL" | "NOT_EQUAL" | "LESS_THAN" | "LESS_THAN_OR_EQUAL" | "GREATER_THAN" | "GREATER_THAN_OR_EQUAL" | "ARRAY_CONTAINS" | "ARRAY_CONTAINS_ANY" | "IN" | "NOT_IN";
+
+export type DirectionOpREST = "ASCENDING" | "DESCENDING";

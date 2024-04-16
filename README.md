@@ -1,6 +1,5 @@
-# bun starter
-
 ## Getting Started
+- Firebase Admin REST API wrapper that works on Vercel edge functions, Bun, cloudflare workers, Deno or any JS runtime.
 
 Click the [Use this template](https://github.com/wobsoriano/bun-lib-starter/generate) button to create a new repository with the contents starter.
 

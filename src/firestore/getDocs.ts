@@ -1,6 +1,4 @@
-
-import { typedEnv } from "..";
-import { FirestoreDocument, RestDocuments } from "../types";
+import { FirestoreDocument, RestDocuments, TypedEnv } from "../types";
 import { formatValuesWithType, generateFirebaseReqHeaders } from "./utils";
 
 /**
@@ -12,7 +10,7 @@ import { formatValuesWithType, generateFirebaseReqHeaders } from "./utils";
  * @template T - The type of the documents being fetched. Defaults to 'any'.
 * @returns {Promise<RestDocuments<T>>} A Promise that resolves to a response object containing fetched Firestore documents.
  */
-export async function getDocsEdge<T = any>(
+export async function getDocsRest<T = any>(
     collectionPath: string,
     options?: {
         limit?: number,
@@ -20,6 +18,7 @@ export async function getDocsEdge<T = any>(
     }): Promise<RestDocuments<T>> {
     try {
 
+        const typedEnv = process.env as TypedEnv;
         let qs = new URLSearchParams({
             fields: 'documents(fields,name),nextPageToken',
         });
@@ -28,46 +27,43 @@ export async function getDocsEdge<T = any>(
             qs.append('pageToken', options.nextPageToken);
         }
 
-        const res: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/speakwiz-app/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents/${collectionPath}?${qs.toString()}&pageSize=${options?.limit || 100}`, {
+        const getDocsRes: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents/${collectionPath}?${qs.toString()}&pageSize=${options?.limit || 100}`, {
             method: 'GET',
-            headers: {
-                ...generateFirebaseReqHeaders(typedEnv.FIREBASE_REST_DATABASE_ID)
-                // "Authorization": "Bearer " + accessToken,
-                // "x-goog-request-params": `project_id=speakwiz-app&database_id=${options.bucket}`
-            },
+            headers: generateFirebaseReqHeaders(typedEnv.FIREBASE_REST_DATABASE_ID)
         }).then((res) => res.json());
 
-        const rawDocs = res?.documents || [];
+    const rawDocs = getDocsRes?.documents || [];
 
-        if (rawDocs?.length > 0) {
-            const docs = rawDocs.map((docRef: {
-                name: string,
-                fields: {
-                    [key: string]: FirestoreDocument
-                }
-            }) => {
-                return formatValuesWithType(docRef);
-            });
+    if (rawDocs?.length > 0) {
+        const docs = rawDocs.map((docRef: {
+            name: string,
+            fields: {
+                [key: string]: FirestoreDocument
+            }
+        }) => {
+            return formatValuesWithType(docRef);
+        });
 
-            return {
-                size: docs?.length,
-                empty: docs?.length === 0,
-                docs: docs
-            };
-        } else {
-            return {
-                size: 0,
-                empty: true,
-                docs: []
-            };
-        }
-    } catch (error) {
-        console.error(error);
+        return {
+            size: docs?.length,
+            empty: docs?.length === 0,
+            docs: docs,
+            jsonResponse: getDocsRes
+        };
+    } else {
         return {
             size: 0,
             empty: true,
-            docs: [],
-            error: error
+            docs: []
         };
     }
+} catch (error) {
+    console.error(error);
+    return {
+        size: 0,
+        empty: true,
+        docs: [],
+        error: error
+    };
+}
 }

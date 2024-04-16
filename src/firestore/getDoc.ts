@@ -1,5 +1,4 @@
-import { typedEnv } from "..";
-import { CompatibleDocument } from "../types";
+import { GetDocumentResponse, TypedEnv } from "../types";
 import { formatValuesWithType, generateFirebaseReqHeaders } from "./utils";
 
 /**
@@ -10,18 +9,26 @@ import { formatValuesWithType, generateFirebaseReqHeaders } from "./utils";
  * @template T - The type of the document being fetched. Defaults to 'any'.
 * @returns {Promise<CompatibleDocument<T>>} A Promise that resolves to a response object containing fetched Firestore document.
  */
-export async function getDocEdge(
+export async function getDocRest(
     docPath: string,
     options?: {
-        db?: string
-    }): Promise<CompatibleDocument> {
+        db?: string,
+        debug?: boolean
+    }): Promise<GetDocumentResponse> {
+    const typedEnv = process.env as TypedEnv;
+    if (options?.debug) {
+        console.log(generateFirebaseReqHeaders(options?.db || typedEnv.FIREBASE_REST_DATABASE_ID))
+    }
     try {
-        const response: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/speakwiz-app/databases/${typedEnv.FIREBASE_REST_PROJECT_ID}/documents/${docPath}`, {
+        const response: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents/${docPath}`, {
             method: 'GET',
             headers: generateFirebaseReqHeaders(options?.db || typedEnv.FIREBASE_REST_DATABASE_ID)
         }
         ).then((res) => res.json());
-        // console.log(response)
+
+        if (response.error) {
+            throw new Error(response.error.message)
+        }
 
         if (response?.fields) {
             return {
@@ -38,6 +45,7 @@ export async function getDocEdge(
         }
     } catch (error) {
         console.error(error)
+        throw new Error(`Error fetching document from Firestore: `);
         return {
             id: docPath.includes(`/`) ? (docPath.split('/').pop() || docPath) : docPath,
             exists: () => false,

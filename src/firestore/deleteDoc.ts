@@ -1,4 +1,4 @@
-import { typedEnv } from "..";
+import { TypedEnv } from "../types";
 import { generateFirebaseReqHeaders } from "./utils";
 
 /**
@@ -10,7 +10,7 @@ import { generateFirebaseReqHeaders } from "./utils";
  * @template T - The type of the documents being fetched. Defaults to 'any'.
 * @returns {Promise<RestDocuments<T>>} A Promise that resolves to a response object containing fetched Firestore documents.
  */
-export async function deleteDocEdge(
+export async function deleteDocRest(
     docPath: string,
     options?: {
         limit?: number,
@@ -20,6 +20,7 @@ export async function deleteDocEdge(
         error?: any,
     }> {
 
+    const typedEnv = process.env as TypedEnv
     try {
         let qs = new URLSearchParams({
             fields: 'documents(fields,name),nextPageToken',
@@ -29,11 +30,11 @@ export async function deleteDocEdge(
             qs.append('pageToken', options.nextPageToken);
         }
 
-        const deleteResponse = await fetch(`https://firestore.googleapis.com/v1beta1/projects/speakwiz-app/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents/${docPath}`, {
+        const deleteResponse: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents/${docPath}`, {
             method: 'DELETE',
             headers: {
                 ...generateFirebaseReqHeaders()
-            },
+            }
         })
         return {
             response: deleteResponse
