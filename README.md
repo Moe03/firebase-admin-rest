@@ -1,5 +1,4 @@
-## Getting Started
-- Firebase Admin REST API wrapper that works on Vercel edge functions, Bun, cloudflare workers, Deno or any JS runtime.
+#### Firebase Admin REST API wrapper that works on Vercel edge functions, Bun, cloudflare workers, Deno or any JS runtime.
 
 DOCS UNDER CONSTRUCTION.
 
