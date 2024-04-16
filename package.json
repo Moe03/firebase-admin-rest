@@ -1,6 +1,6 @@
 {
-  "name": "firebase-edge",
-  "version": "0.0.0",
+  "name": "firebase-admin-rest",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "",
@@ -16,13 +16,13 @@
     "bun"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/wobsoriano/pkg-name#readme",
+  "homepage": "https://github.com/Moe03/firebase-admin-rest#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wobsoriano/pkg-name.git"
+    "url": "git+https://github.com/Moe03/firebase-admin-rest.git"
   },
-  "bugs": "https://github.com/wobsoriano/pkg-name/issues",
-  "author": "Robert Soriano <sorianorobertc@gmail.com>",
+  "bugs": "https://github.com/Moe03/firebase-admin-rest/issues",
+  "author": "Moe Ayman <moeaymandev@gmail.com>",
   "devDependencies": {
     "bun-plugin-dts": "^0.2.1",
     "@types/bun": "^1.0.0",
@@ -31,7 +31,6 @@
   "dependencies": {
     "@google-cloud/firestore": "^7.6.0",
     "@tsndr/cloudflare-worker-jwt": "^2.5.3",
-    "dotenv": "^16.4.5",
-    "firebase-admin": "^12.0.0"
+    "dotenv": "^16.4.5"
   }
 }

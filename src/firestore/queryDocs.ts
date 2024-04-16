@@ -1,7 +1,5 @@
-
-import { OrderByDirection, WhereFilterOp } from '@google-cloud/firestore';
 import { DirectionOpREST, RestDocuments, TypedEnv, WhereFilterOpREST } from '../types';
-import { formatValuesWithType, generateFirebaseReqHeaders, humanObjectToDumbGoogle, humanValueToDumbGoogle } from './utils';
+import { formatValuesWithType, generateFirebaseReqHeaders, humanValueToDumbGoogle } from './utils';
 
 /**
  * Queries documents from a Firestore collection using REST API.

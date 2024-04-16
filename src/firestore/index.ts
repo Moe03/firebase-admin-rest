@@ -1,12 +1,19 @@
-// import { initEdgeFirebase } from "../firebase-auth-utils/initFirebase";
-// import { deleteDocEdge } from "./deleteDoc";
-// import { getDocEdge } from "./getDoc";
-// import { getDocsEdge } from "./getDocs";
+import { initFirebaseRest } from "../firebase-auth-utils/initFirebase"
+import { addDocRest } from "./addDocRest"
+import { deleteDocRest } from "./deleteDoc"
+import { getDocRest } from "./getDoc"
+import { getDocsRest } from "./getDocs"
+import { queryDocsRest } from "./queryDocs"
+import { setDocRest } from "./setDoc"
+import { updateDocRest } from "./updateDoc"
 
-// export {
-//     initEdgeFirebase,
-//     getDocEdge,
-//     getDocsEdge,
-//     deleteDocEdge
-// }
-export {}
+export {
+    initFirebaseRest,
+    getDocRest,
+    getDocsRest,
+    queryDocsRest,
+    deleteDocRest,
+    updateDocRest,
+    setDocRest,
+    addDocRest,
+}

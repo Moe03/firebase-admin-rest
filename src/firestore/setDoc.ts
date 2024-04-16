@@ -51,10 +51,7 @@ export async function setDocRest<T extends object>(
     docPath = removeFirstAndLastSlash(docPath);
     const docId = docPath?.includes(`/`) ? (docPath.split('/').pop() || docPath) : docPath;
     const dumbGoogleObject = humanObjectToDumbGoogle(docData);
-    let qs = ''
-    if (docId) {
-        qs = `?documentId=${encodeURIComponent(docId)}`
-    }
+ 
     const mergeAppend = options?.merge ? `?${Object.keys(docData).map((key, index) => (index !== 0 ? '&' : '') + `updateMask.fieldPaths=${key}`).join('')}` : ''
     const setDocRes: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents/${docPath}${mergeAppend}`, {
         method: 'PATCH',
