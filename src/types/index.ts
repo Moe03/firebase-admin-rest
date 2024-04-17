@@ -48,10 +48,16 @@ export interface FirebaseAdminConfig {
     universe_domain?: string;
 }
 
-export interface FirestoreDatabase {
-    name: string,
-    projectId?: string,
-    accessToken: string,
+export interface InitFirebaseAdminInput {
+    serviceAccount: FirebaseAdminConfig
+    databaseId?: string;
+    ignoreUndefinedValues?: boolean;
+}
+
+export interface InitFirebaseAdminOuput {
+    serviceAccount: FirebaseAdminConfig,
+    databaseId: string,
+    accessToken: string
 }
 
 

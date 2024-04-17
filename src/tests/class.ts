@@ -1,8 +1,17 @@
-import { FirebaseAdminRest } from "../firestore/Class";
+// import { initFirebaseRest } from "../firestore";
+import { initFirebaseAdmin } from "../admin";
+
+export interface User {
+    id: string;
+    name: string;
+    email: string;
+    password: string;
+}
 
 async function test() {
-    const db = new FirebaseAdminRest();
-    const res = await db.collection(`user`).where('name', `EQUAL`, 5).limit(5).get();
-    console.log(res);
+    // await initFirebaseRest();
+    const db = await initFirebaseAdmin();
+    const doc = await db.doc<User>(`users/test_1`).get();
+    console.log(doc.data())
 }
 test()

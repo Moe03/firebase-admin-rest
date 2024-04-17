@@ -1,7 +1,7 @@
 
 
 import * as jwt from '@tsndr/cloudflare-worker-jwt'
-import { FirebaseAdminConfig, FirestoreDatabase } from '../types';
+import { InitFirebaseAdminInput, InitFirebaseAdminOuput } from '../types';
 import { testFbCredentials } from './testFbCredentials';
 
 /**
@@ -56,11 +56,7 @@ export async function generateJWT(input?: {
  * @returns A promise that resolves to the Firestore database information.
  * @throws Error if the project_id is not provided in the serviceAccount.
  */
-export async function initFirebaseRest(options?: {
-    serviceAccount: FirebaseAdminConfig
-    databaseId?: string;
-    ignoreUndefinedValues?: boolean;
-}): Promise<FirestoreDatabase> {
+export async function initFirebaseRest(options?: InitFirebaseAdminInput): Promise<InitFirebaseAdminOuput> {
     if (options?.serviceAccount === undefined) {
         options = {
             serviceAccount: {
@@ -87,8 +83,8 @@ export async function initFirebaseRest(options?: {
     }
 
     return {
-        name: options.databaseId || '(default)',
-        projectId: options.serviceAccount?.project_id,
-        accessToken: accessToken
+        databaseId: options.databaseId || '(default)',
+        serviceAccount: options.serviceAccount,
+        accessToken: accessToken,
     };
 }
