@@ -11,7 +11,7 @@ export interface User {
 async function test() {
     // await initFirebaseRest();
     const db = await initFirebaseAdmin();
-    const doc = await db.doc<User>(`users/test_1`).get();
-    console.log(doc.data())
+    const doc = await db.collection<User>(`users`).where(`email`, `==`, `test@gmail.com`).limit(10).page(1).get();
+    console.log(doc.docs.map(doc => doc.data()));
 }
 test()

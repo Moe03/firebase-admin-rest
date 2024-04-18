@@ -16,13 +16,14 @@ export async function getDocRest(
         debug?: boolean
     }): Promise<GetDocumentResponse> {
     const typedEnv = process.env as TypedEnv;
+    const finalDb = options?.db || typedEnv.FIREBASE_REST_DATABASE_ID;
     if (options?.debug) {
-        console.log(generateFirebaseReqHeaders(options?.db || typedEnv.FIREBASE_REST_DATABASE_ID))
+        console.log(generateFirebaseReqHeaders(finalDb))
     }
     try {
-        const response: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents/${docPath}`, {
+        const response: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${finalDb}/documents/${docPath}`, {
             method: 'GET',
-            headers: generateFirebaseReqHeaders(options?.db || typedEnv.FIREBASE_REST_DATABASE_ID)
+            headers: generateFirebaseReqHeaders(finalDb)
         }
         ).then((res) => res.json());
 

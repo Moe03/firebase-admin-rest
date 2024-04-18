@@ -13,12 +13,14 @@ import { formatValuesWithType, generateFirebaseReqHeaders } from "./utils";
 export async function getDocsRest<T = any>(
     collectionPath: string,
     options?: {
+        db?: string,
         limit?: number,
         nextPageToken?: string
     }): Promise<RestDocuments<T>> {
     try {
 
         const typedEnv = process.env as TypedEnv;
+        const finalDb = options?.db || typedEnv.FIREBASE_REST_DATABASE_ID;
         let qs = new URLSearchParams({
             fields: 'documents(fields,name),nextPageToken',
         });
@@ -27,9 +29,9 @@ export async function getDocsRest<T = any>(
             qs.append('pageToken', options.nextPageToken);
         }
 
-        const getDocsRes: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents/${collectionPath}?${qs.toString()}&pageSize=${options?.limit || 100}`, {
+        const getDocsRes: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${finalDb}/documents/${collectionPath}?${qs.toString()}&pageSize=${options?.limit || 100}`, {
             method: 'GET',
-            headers: generateFirebaseReqHeaders(typedEnv.FIREBASE_REST_DATABASE_ID)
+            headers: generateFirebaseReqHeaders(finalDb)
         }).then((res) => res.json());
 
     const rawDocs = getDocsRes?.documents || [];

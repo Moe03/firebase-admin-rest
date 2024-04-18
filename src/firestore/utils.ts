@@ -1,4 +1,5 @@
-import { FirestoreDocument, TypedEnv } from "../types";
+import { OrderByDirection, WhereFilterOp } from "@google-cloud/firestore";
+import { DirectionOpREST, FirestoreDocument, TypedEnv, WhereFilterOpREST } from "../types";
 
 export function humanValueToDumbGoogle(value: any): FirestoreDocument {
     switch (typeof value) {
@@ -130,4 +131,42 @@ export function generateRandomId(length?: number) {
         result += characters.charAt(randomIndex);
     }
     return result;
+}
+
+export function whereOpToRest(op: WhereFilterOp): WhereFilterOpREST {
+    switch (op) {
+        case '==':
+            return 'EQUAL';
+        case '>':
+            return 'GREATER_THAN';
+        case '>=':
+            return 'GREATER_THAN_OR_EQUAL';
+        case '<':
+            return 'LESS_THAN';
+        case '<=':
+            return 'LESS_THAN_OR_EQUAL';
+        case 'array-contains':
+            return 'ARRAY_CONTAINS';
+        case 'in':
+            return 'IN';
+        case 'array-contains-any':
+            return 'ARRAY_CONTAINS_ANY';
+        case "!=":
+            return "NOT_EQUAL";
+        case 'not-in':
+            return 'NOT_IN';
+        default:
+            throw new Error(`Invalid WhereFilterOp: ${op}`);
+    }
+}
+
+export function orderOpToRest(op: OrderByDirection): DirectionOpREST {
+    switch (op) {
+        case 'asc':
+            return 'ASCENDING';
+        case 'desc':
+            return 'DESCENDING';
+        default:
+            throw new Error(`Invalid OrderByDirection: ${op}`);
+    }
 }

@@ -48,14 +48,15 @@ export async function setDocRest<T extends object>(
     //     options.merge = true;
     // }
     const typedEnv = process.env as TypedEnv;
+    const finalDb = options?.db || typedEnv.FIREBASE_REST_DATABASE_ID;
     docPath = removeFirstAndLastSlash(docPath);
     const docId = docPath?.includes(`/`) ? (docPath.split('/').pop() || docPath) : docPath;
     const dumbGoogleObject = humanObjectToDumbGoogle(docData);
  
     const mergeAppend = options?.merge ? `?${Object.keys(docData).map((key, index) => (index !== 0 ? '&' : '') + `updateMask.fieldPaths=${key}`).join('')}` : ''
-    const setDocRes: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents/${docPath}${mergeAppend}`, {
+    const setDocRes: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${finalDb}/documents/${docPath}${mergeAppend}`, {
         method: 'PATCH',
-        headers: generateFirebaseReqHeaders(options?.db || ''),
+        headers: generateFirebaseReqHeaders(finalDb),
         body: JSON.stringify({
             fields: dumbGoogleObject
         })

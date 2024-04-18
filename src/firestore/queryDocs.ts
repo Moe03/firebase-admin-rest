@@ -57,13 +57,14 @@ export async function queryDocsRest<T = any>(
             field: string,
             op: WhereFilterOpREST,
             value: any
-        },
+        }[],
         orderBy?: {
             field: string,
             direction: DirectionOpREST
         },
         limit?: number,
-        page?: number
+        page?: number,
+        db?: string
     }): Promise<RestDocuments<T>> {
 
     const typedEnv = process.env as TypedEnv;
@@ -80,20 +81,31 @@ export async function queryDocsRest<T = any>(
             limit: options?.limit || 100
         },
     }
-
-    if (options?.where?.field && options?.where?.value) {
+    // console.log(options?.where)
+    for (const whereQuery of options?.where || []) {
         finalJson.structuredQuery.where = {
-            "fieldFilter": {
-                "field": {
-                    "fieldPath": options?.where?.field
-                },
-                "op": options.where.op,
-                "value": humanValueToDumbGoogle(options.where.value)
+            "compositeFilter": {
+                "op": "AND",
+                "filters": [
+                    ...finalJson?.structuredQuery?.where?.compositeFilter?.filters || [],
+                    {
+                        "fieldFilter": {
+                            "field": {
+                                "fieldPath": whereQuery.field
+                            },
+                            "op": whereQuery.op,
+                            "value": humanValueToDumbGoogle(whereQuery.value)
+                        }
+                    }
+                ]
             }
+
+
         }
     }
 
-    if (options?.orderBy) {
+
+    if (options?.orderBy && options?.orderBy.field) {
         finalJson.structuredQuery.orderBy = [
             {
                 "field": {
@@ -106,7 +118,7 @@ export async function queryDocsRest<T = any>(
     if (offset) {
         finalJson.structuredQuery.offset = offset;
     }
-
+    console.log(JSON.stringify(finalJson))
     const response: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents${parentDoc ? `/${parentDoc}` : ''}:runQuery`, {
         method: 'POST',
         headers: generateFirebaseReqHeaders(),
