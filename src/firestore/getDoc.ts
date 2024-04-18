@@ -1,4 +1,4 @@
-import { GetDocumentResponse, TypedEnv } from "../types";
+import {  GetDocumentRes, TypedEnv } from "../types";
 import { formatValuesWithType, generateFirebaseReqHeaders } from "./utils";
 
 /**
@@ -9,12 +9,12 @@ import { formatValuesWithType, generateFirebaseReqHeaders } from "./utils";
  * @template T - The type of the document being fetched. Defaults to 'any'.
 * @returns {Promise<CompatibleDocument<T>>} A Promise that resolves to a response object containing fetched Firestore document.
  */
-export async function getDocRest(
+export async function getDocRest<T extends object>(
     docPath: string,
     options?: {
         db?: string,
         debug?: boolean
-    }): Promise<GetDocumentResponse> {
+    }): Promise<GetDocumentRes> {
     const typedEnv = process.env as TypedEnv;
     const finalDb = options?.db || typedEnv.FIREBASE_REST_DATABASE_ID;
     if (options?.debug) {
@@ -34,14 +34,18 @@ export async function getDocRest(
         if (response?.fields) {
             return {
                 id: docPath.includes(`/`) ? (docPath.split('/').pop() || docPath) : docPath,
+                ref: docPath,
                 exists: () => true,
-                data: () => formatValuesWithType(response)
+                data: () => formatValuesWithType(response),
+                jsonResponse: response
             }
         } else {
             return {
                 id: docPath.includes(`/`) ? (docPath.split('/').pop() || docPath) : docPath,
+                ref: docPath,
                 exists: () => false,
                 data: () => undefined,
+                jsonResponse: response
             }
         }
     } catch (error) {
@@ -49,6 +53,7 @@ export async function getDocRest(
         throw new Error(`Error fetching document from Firestore: `);
         return {
             id: docPath.includes(`/`) ? (docPath.split('/').pop() || docPath) : docPath,
+            ref: docPath,
             exists: () => false,
             data: () => undefined,
             error: error,

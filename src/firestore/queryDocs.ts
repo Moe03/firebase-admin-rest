@@ -1,4 +1,4 @@
-import { DirectionOpREST, RestDocuments, TypedEnv, WhereFilterOpREST } from '../types';
+import { DirectionOpREST, Document, GetDocumentsRes, TypedEnv, WhereFilterOpREST } from '../types';
 import { formatValuesWithType, generateFirebaseReqHeaders, humanValueToDumbGoogle } from './utils';
 
 /**
@@ -53,7 +53,7 @@ import { formatValuesWithType, generateFirebaseReqHeaders, humanValueToDumbGoogl
 export async function queryDocsRest<T = any>(
     collectionPath: string,
     options?: {
-        where: {
+        where?: {
             field: string,
             op: WhereFilterOpREST,
             value: any
@@ -65,13 +65,14 @@ export async function queryDocsRest<T = any>(
         limit?: number,
         page?: number,
         db?: string
-    }): Promise<RestDocuments<T>> {
+    }): Promise<GetDocumentsRes<T>> {
 
     const typedEnv = process.env as TypedEnv;
     const offset = options?.page ? (options.page - 1) * (options.limit || 20) : 0;
     let documentArr = collectionPath.includes(`/`) ? collectionPath.split(`/`) : [];
     let collectionId = documentArr.length ? documentArr.pop() : collectionPath;
     const parentDoc = documentArr?.length ? documentArr.join('/') : '';
+    const ref = parentDoc ? `${parentDoc}/${collectionId}` : collectionId;
 
     let finalJson: any = {
         "structuredQuery": {
@@ -103,8 +104,6 @@ export async function queryDocsRest<T = any>(
 
         }
     }
-
-
     if (options?.orderBy && options?.orderBy.field) {
         finalJson.structuredQuery.orderBy = [
             {
@@ -118,7 +117,7 @@ export async function queryDocsRest<T = any>(
     if (offset) {
         finalJson.structuredQuery.offset = offset;
     }
-    console.log(JSON.stringify(finalJson))
+    // console.log(JSON.stringify(finalJson))
     const response: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents${parentDoc ? `/${parentDoc}` : ''}:runQuery`, {
         method: 'POST',
         headers: generateFirebaseReqHeaders(),
@@ -149,9 +148,10 @@ export async function queryDocsRest<T = any>(
             empty: docsArr.length === 0,
             docs: docsArr.map((doc: any) => ({
                 id: doc.id,
+                ref,
                 exists: () => true,
                 data: () => doc
-            })),
+            } as Document<T>)),
             jsonResponse: response
         }
     } else {

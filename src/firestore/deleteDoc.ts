@@ -13,8 +13,6 @@ import { generateFirebaseReqHeaders } from "./utils";
 export async function deleteDocRest(
     docPath: string,
     options?: {
-        limit?: number,
-        nextPageToken?: string,
         db?: string
     }): Promise<{
         response?: Response,
@@ -24,19 +22,9 @@ export async function deleteDocRest(
     const typedEnv = process.env as TypedEnv
     const finalDb = options?.db || typedEnv.FIREBASE_REST_DATABASE_ID;
     try {
-        let qs = new URLSearchParams({
-            fields: 'documents(fields,name),nextPageToken',
-        });
-
-        if (options?.nextPageToken) {
-            qs.append('pageToken', options.nextPageToken);
-        }
-
         const deleteResponse: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${finalDb}/documents/${docPath}`, {
             method: 'DELETE',
-            headers: {
-                ...generateFirebaseReqHeaders(finalDb)
-            }
+            headers: generateFirebaseReqHeaders(finalDb)
         })
         return {
             response: deleteResponse

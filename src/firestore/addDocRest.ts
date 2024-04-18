@@ -1,4 +1,4 @@
-import { GetDocumentResponse } from "../types";
+import { GetDocumentRes } from "../types";
 import { setDocRest } from "./setDoc";
 import { generateRandomId, removeFirstAndLastSlash } from "./utils"
 
@@ -17,7 +17,7 @@ export async function addDocRest<T extends object>(
     options?: {
         db?: string
     }
-): Promise<GetDocumentResponse<T>> {
+): Promise<GetDocumentRes<T>> {
     const newDocId = generateRandomId(20);
     collectionPath = removeFirstAndLastSlash(collectionPath);
     const addDocRes = await setDocRest<T>(

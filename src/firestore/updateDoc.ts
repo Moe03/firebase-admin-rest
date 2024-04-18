@@ -1,4 +1,4 @@
-import { GetDocumentResponse } from "../types";
+import { GetDocumentRes } from "../types";
 import { setDocRest } from "./setDoc";
 
 export async function updateDocRest<T extends object>(
@@ -6,7 +6,7 @@ export async function updateDocRest<T extends object>(
     docData: T,
     options?: {
         db?: string
-    }): Promise<GetDocumentResponse<T>> {
+    }): Promise<GetDocumentRes<T>> {
 
     const updateDocRes = await setDocRest<T>(docPath, docData, {
         merge: true,

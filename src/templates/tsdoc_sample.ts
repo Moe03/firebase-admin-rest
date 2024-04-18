@@ -1,3 +1,4 @@
+// idk what this is tbh lol
 /**
  * Initializes Firebase for Edge deployment.
  * @param path - The path to the document.

@@ -31,6 +31,7 @@
   "dependencies": {
     "@google-cloud/firestore": "^7.6.0",
     "@tsndr/cloudflare-worker-jwt": "^2.5.3",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "moment": "^2.30.1"
   }
 }

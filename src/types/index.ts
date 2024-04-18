@@ -78,20 +78,19 @@ export interface FirestoreDocument {
  * @param data - The document data of type T.
  * @param error - Optional. Represents any error information in the response.
  */
-export interface CompatibleDocument<T = any> {
+export interface Document<T = any> {
     id: string,
-    data: () => T,
-    error?: any
+    ref: string,
+    data: () => T | undefined,
+    exists: () => boolean,
 }
 
-export interface GetDocumentResponse<T = any> {
-    id: string,
-    exists: () => boolean,
-    data: () => T,
+export interface GetDocumentRes<T = any> extends Document<T> {
     error?: any,
     response?: Response,
     jsonResponse?: object
 }
+
 
 /**
  * Represents a RESTful response object containing documents.
@@ -101,12 +100,25 @@ export interface GetDocumentResponse<T = any> {
  * @param docs - An array of documents of type T.
  * @param error - Optional. Represents any error information in the response.
  */
-export interface RestDocuments<T = any> {
+export interface GetDocumentsRes<T = any> {
     size: number;
     empty: boolean;
-    docs: CompatibleDocument<T>[];
+    docs: Document<T>[];
     error?: any;
     jsonResponse?: object;
+}
+
+export interface toJsonResponse extends GetDocumentsRes {
+    docReads?: number;
+}
+
+export interface DJGet<T = any> {
+    size: number;
+    empty: boolean;
+    docs: Document<T>[];
+    error?: any;
+    jsonResponse?: object;
+    docReads?: number;
 }
 
 export interface TypedEnv {
@@ -115,6 +127,12 @@ export interface TypedEnv {
     FIREBASE_REST_PROJECT_ID: string;
     FIREBASE_REST_DATABASE_ID: string;
     [key: string]: string;
+}
+
+export interface InfoResponse {
+    success: boolean;
+    message: string;
+    jsonResponse: any;
 }
 
 export type WhereFilterOpREST = "EQUAL" | "NOT_EQUAL" | "LESS_THAN" | "LESS_THAN_OR_EQUAL" | "GREATER_THAN" | "GREATER_THAN_OR_EQUAL" | "ARRAY_CONTAINS" | "ARRAY_CONTAINS_ANY" | "IN" | "NOT_IN";

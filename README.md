@@ -1,6 +1,10 @@
-#### Firebase Admin REST API wrapper that works on Vercel edge functions, Bun, cloudflare workers, Deno or any JS runtime.
+### **Firebase Admin REST API wrapper that works on Vercel edge functions, Bun, cloudflare workers, Deno or any JS runtime.**
 
-DOCS UNDER CONSTRUCTION.
+### Why
+- This main reason for the creation of this is to provide a common SDK that can be used in any JS environment without problems.
+- The official firebase-admin sdk doesn't work on edge functions, bun, workers, deno and sometimes this can be a deal breaker.
+- We have also implemented helper functions that helped our team internally with other problems as well
+
 
 ## License
 

@@ -1,4 +1,4 @@
-import { GetDocumentResponse, TypedEnv } from "../types";
+import { GetDocumentRes, TypedEnv } from "../types";
 import { generateFirebaseReqHeaders, humanObjectToDumbGoogle, removeFirstAndLastSlash } from "./utils";
 
 
@@ -42,7 +42,7 @@ export async function setDocRest<T extends object>(
     options?: {
         db?: string,
         merge?: boolean
-    }): Promise<GetDocumentResponse<T>> {
+    }): Promise<GetDocumentRes<T>> {
 
     // if(options.merge === undefined){
     //     options.merge = true;
@@ -52,7 +52,7 @@ export async function setDocRest<T extends object>(
     docPath = removeFirstAndLastSlash(docPath);
     const docId = docPath?.includes(`/`) ? (docPath.split('/').pop() || docPath) : docPath;
     const dumbGoogleObject = humanObjectToDumbGoogle(docData);
- 
+
     const mergeAppend = options?.merge ? `?${Object.keys(docData).map((key, index) => (index !== 0 ? '&' : '') + `updateMask.fieldPaths=${key}`).join('')}` : ''
     const setDocRes: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${finalDb}/documents/${docPath}${mergeAppend}`, {
         method: 'PATCH',
@@ -67,6 +67,7 @@ export async function setDocRest<T extends object>(
     return {
         id: docId,
         exists: () => true,
+        ref: docPath,
         data: () => docData,
         response: setDocRes
     }
