@@ -95,7 +95,7 @@ export function formatValuesWithType(responseFB: {
     fields: {
         [key: string]: FirestoreDocument
     }
-}) {
+}): any {
     // console.log(inputObject)
     // console.log(`responseFB: `, responseFB)
     const id = responseFB?.name ? responseFB?.name?.split('/').pop() : undefined;

@@ -1,6 +1,6 @@
 {
   "name": "firebase-admin-rest",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "",
@@ -24,9 +24,9 @@
   "bugs": "https://github.com/Moe03/firebase-admin-rest/issues",
   "author": "Moe Ayman <moeaymandev@gmail.com>",
   "devDependencies": {
-    "bun-plugin-dts": "^0.2.1",
     "@types/bun": "^1.0.0",
-    "typescript": "^5.2.2"
+    "bun-plugin-dts": "^0.2.1",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "@google-cloud/firestore": "^7.6.0",

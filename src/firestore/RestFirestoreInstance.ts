@@ -7,35 +7,16 @@ import { orderOpToRest, removeFirstAndLastSlash, whereOpToRest } from "./utils";
 import { setDocRest } from "./setDoc";
 import { DJDeleteREST, DocsToJSONRest, JSONtoDocsRest } from "./helper_utils/DJUtils";
 
-/**
- * Initializes a new instance of the FirebaseAdminRest class.
- * @param {InitFirebaseAdminInput} initialValue - Optional initial value for the FirebaseAdminConfig.
- */
-export class RestFirestoreInstance<T = any> {
-
-    private initialValue: InitFirebaseAdminInput | undefined;
-
-    constructor(initialValue?: InitFirebaseAdminInput) {
-        this.initialValue = initialValue;
-        return this;
-    }
-
-    /**
-     * Initializes the Firebase Rest Admin SDK.
-     * @returns {FirestoreOperations} A new instance of the FirestoreOperations class.
-     */
-    async initApp() {
-        const appInstance = await initFirebaseRest(this.initialValue);
-        return new FirestoreOperations(appInstance.databaseId);
-    }
-}
+// export default function initFirestoreInstance<T = any>(initialValue?: InitFirebaseAdminInput): RestFirestoreInstance<T> {
+//     return new RestFirestoreInstance(initialValue);
+// }
 
 /**
  * Nested class for operations related to documents.
  */
 class FirestoreOperations {
 
-    constructor(private databaseId: string) {
+    constructor(public databaseId: string) {
         return this;
     }
 
@@ -43,8 +24,8 @@ class FirestoreOperations {
         return new DocOperations<T>(removeFirstAndLastSlash(docPath), this.databaseId);
     }
 
-    public collection<T extends object>(collectionPath: string): CollectionOperations<T> {
-        return new CollectionOperations<T>(removeFirstAndLastSlash(collectionPath), this.databaseId);
+    public collection<T extends object>(collectionPath: string) {
+        return new CollectionOperations<T>(removeFirstAndLastSlash(collectionPath), this.databaseId)
     }
 }
 
@@ -52,9 +33,7 @@ class FirestoreOperations {
  * Nested class for operations related to documents.
  */
 class DocOperations<T extends object> {
-    constructor(private docPath: string, private databaseId: string) { }
-
-
+    constructor(public docPath: string, public databaseId: string) { }
     /**
     * Update a document in Firestore.
     * @param {T} data - The data to set in the document.
@@ -99,29 +78,22 @@ class DocOperations<T extends object> {
     }
 }
 
-/**
- * Nested class for operations related to documents.
- */
-/**
- * Represents a collection operations class for Firestore.
- * Provides methods for querying and manipulating documents in a collection.
- * @template T - The type of the documents in the collection.
- */
+
 class CollectionOperations<T extends object> {
 
-    private whereQueries: {
+    public whereQueries: {
         field: string,
         op: WhereFilterOpREST,
         value: any
     }[];
-    private orderByQuery: {
+    public orderByQuery: {
         field: string,
         direction: DirectionOpREST
     };
-    private limitQuery: number;
-    private pageQuery: number;
+    public limitQuery: number;
+    public pageQuery: number;
 
-    constructor(private collectionPath: string, private databaseId: string) {
+    constructor(public collectionPath: string, public databaseId: string) {
         this.whereQueries = [];
         this.orderByQuery = {
             field: "",
@@ -216,10 +188,24 @@ class CollectionOperations<T extends object> {
 }
 
 /**
- * This converts a collection to a store that saves bandwidth, to store analytics for example without querying hundreds or thousands of documents.
+ * Initializes a new instance of the FirebaseAdminRest class.
+ * @param {InitFirebaseAdminInput | undefined} initialValue - Optional initial value for the FirebaseAdminConfig.
  */
-class DJOperations<T extends object> {
-    get() {
-        // Implement get operation here
+export default class RestFirestoreInstance {
+
+    public initialValue: InitFirebaseAdminInput | undefined;
+
+    constructor(initialValue?: InitFirebaseAdminInput) {
+        this.initialValue = initialValue;
+        return this;
+    }
+
+    /**
+     * Initializes the Firebase Rest Admin SDK.
+     * @returns {FirestoreOperations} A new instance of the FirestoreOperations class.
+     */
+    async initApp() {
+        const appInstance = await initFirebaseRest(this.initialValue);
+        return new FirestoreOperations(appInstance.databaseId);
     }
 }

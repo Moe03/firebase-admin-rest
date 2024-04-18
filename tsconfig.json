@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "target": "ESNext",
     "module": "esnext",
     "strict": true,
     "esModuleInterop": true,
@@ -11,6 +11,13 @@
     "allowJs": true,
     "noEmit": true,
     "outDir": "dist",
-    "resolveJsonModule": true
-  }
+    "resolveJsonModule": true,
+    "baseUrl": "."
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

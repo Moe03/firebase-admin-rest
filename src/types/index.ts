@@ -1,3 +1,15 @@
+export type OrderByDirection = 'desc' | 'asc';
+export type WhereFilterOp =
+| '<'
+| '<='
+| '=='
+| '!='
+| '>='
+| '>'
+| 'array-contains'
+| 'in'
+| 'not-in'
+| 'array-contains-any';
 /**
  * Firebase Admin Configuration interface.
  */
@@ -85,10 +97,9 @@ export interface Document<T = any> {
     exists: () => boolean,
 }
 
-export interface GetDocumentRes<T = any> extends Document<T> {
-    error?: any,
-    response?: Response,
-    jsonResponse?: object
+export interface GetDocumentRes<T = any> {
+    id: any,
+    ref: any,
 }
 
 
@@ -138,3 +149,23 @@ export interface InfoResponse {
 export type WhereFilterOpREST = "EQUAL" | "NOT_EQUAL" | "LESS_THAN" | "LESS_THAN_OR_EQUAL" | "GREATER_THAN" | "GREATER_THAN_OR_EQUAL" | "ARRAY_CONTAINS" | "ARRAY_CONTAINS_ANY" | "IN" | "NOT_IN";
 
 export type DirectionOpREST = "ASCENDING" | "DESCENDING";
+
+
+/**
+ * Nested class for operations related to documents.
+ */
+/**
+ * Represents a collection operations class for Firestore.
+ * Provides methods for querying and manipulating documents in a collection.
+ * @template T - The type of the documents in the collection.
+ */
+export interface CollectionOperationsInstance<T extends object> {
+    where(field: string, op: WhereFilterOp, value: any): CollectionOperationsInstance<T>;
+    orderBy(field: string, direction: OrderByDirection): CollectionOperationsInstance<T>;
+    limit(limit: number): CollectionOperationsInstance<T>;
+    delete(): Promise<any>;
+    page(page: number): CollectionOperationsInstance<T>;
+    tojson(): Promise<toJsonResponse>;
+    todocs(data: T[]): Promise<any>;
+    get(): Promise<GetDocumentsRes<T>>;
+}
