@@ -46,8 +46,12 @@ console.log(docRef.data())
 ```
 - Or you can initalise the firestore instance with the service account object:
 ```ts
+// TODO: Replace the following with your app's Firebase project configuration
+const serviceAccount = {
+  //...
+};
 const db = await initFirebaseRest({
-    serviceAccount: serviceAccountObject, // service acccount config
+    serviceAccount: serviceAccount, // service acccount config
     databaseId: '(default)', // change it to a custom db
 }).firestore();
 
