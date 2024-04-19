@@ -1,5 +1,3 @@
-
-
 import * as jwt from '@tsndr/cloudflare-worker-jwt'
 import { InitFirebaseAdminInput, InitFirebaseAdminOuput } from '../types';
 import { testFbCredentials } from './testFbCredentials';

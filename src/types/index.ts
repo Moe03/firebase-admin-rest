@@ -97,9 +97,10 @@ export interface Document<T = any> {
     exists: () => boolean,
 }
 
-export interface GetDocumentRes<T = any> {
-    id: any,
-    ref: any,
+export interface GetDocumentRes<T = any> extends Document<T> {
+    response?: any,
+    jsonResponse?: object,
+    error?: any
 }
 
 

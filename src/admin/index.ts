@@ -1,6 +1,5 @@
-import { initFirebaseAdmin } from "./initFAS"
-
+import { initFirebaseRest } from "./initFAS"
 
 export {
-    initFirebaseAdmin
+    initFirebaseRest
 }

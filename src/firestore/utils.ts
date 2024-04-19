@@ -1,5 +1,4 @@
-import { OrderByDirection, WhereFilterOp } from "@google-cloud/firestore";
-import { DirectionOpREST, FirestoreDocument, TypedEnv, WhereFilterOpREST } from "../types";
+import { DirectionOpREST, FirestoreDocument, OrderByDirection, TypedEnv, WhereFilterOp, WhereFilterOpREST } from "../types";
 
 export function humanValueToDumbGoogle(value: any): FirestoreDocument {
     switch (typeof value) {

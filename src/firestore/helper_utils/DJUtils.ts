@@ -34,9 +34,7 @@ export async function DocsToJSONRest<T extends object>(collectionPath: string, o
             }
         });
 
-        // const getPromisesRes = await Promise.allSettled(getPromises).then((res: any) => res.map((r) => r.value));
         const concattedJSONString = docsRes.docs.map((doc) => doc?.data()?.JSON_STRING || '').join('');
-        // console.log(concattedJSONString)
         const finalJsonArr = JSON.parse(concattedJSONString || "[]");
         if (!Array.isArray(finalJsonArr)) {
             throw new Error(`JSON payload in collection ${collectionPath} is corrupt, a collection using the DJ engine can't be used to store anything else but its own document data.`);
@@ -48,7 +46,7 @@ export async function DocsToJSONRest<T extends object>(collectionPath: string, o
                 exists: true
             }
         });
-        console.log(finalJson.length)
+        // console.log(finalJson.length)
         return {
             size: finalJson?.length || 0,
             empty: finalJson?.length ? false : true,
@@ -125,7 +123,7 @@ export async function DJDeleteREST(collectionPath: string, options: {
                 jsonResponse: docsRes.jsonResponse
             }
         }
-        console.log(`docs res: `, docsRes.docs.length);
+        // console.log(`docs res: `, docsRes.docs.length);
         const delPromises = []
         for (let i = 0; i < docsRes.docs?.length; i++) {
             const docId = docsRes.docs[i].id;

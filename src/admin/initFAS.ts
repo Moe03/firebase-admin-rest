@@ -1,8 +1,8 @@
 
+import { InitFirebaseAdminInput } from "src/types";
 import RestFirestoreInstance from "../firestore/RestFirestoreInstance";
-import { InitFirebaseAdminInput } from "../types";
 
-export async function initFirebaseAdmin(options?: InitFirebaseAdminInput) {
-    const db = await new RestFirestoreInstance().initApp();
+export function initFirebaseRest(options?: InitFirebaseAdminInput) {
+    const db = new RestFirestoreInstance(options)
     return db;
 }

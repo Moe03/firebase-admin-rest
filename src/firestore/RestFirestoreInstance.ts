@@ -1,6 +1,5 @@
-import { OrderByDirection, WhereFilterOp } from "@google-cloud/firestore";
 import { initFirebaseRest } from "../firebase-auth-utils/initFirebase";
-import { DirectionOpREST, GetDocumentRes, GetDocumentsRes, InitFirebaseAdminInput, toJsonResponse, WhereFilterOpREST } from "../types";
+import { CollectionOperationsInstance, DirectionOpREST, GetDocumentRes, GetDocumentsRes, InitFirebaseAdminInput, OrderByDirection, toJsonResponse, WhereFilterOp, WhereFilterOpREST } from "../types";
 import { getDocRest } from "./getDoc";
 import { queryDocsRest } from "./queryDocs";
 import { orderOpToRest, removeFirstAndLastSlash, whereOpToRest } from "./utils";
@@ -24,7 +23,7 @@ class FirestoreOperations {
         return new DocOperations<T>(removeFirstAndLastSlash(docPath), this.databaseId);
     }
 
-    public collection<T extends object>(collectionPath: string) {
+    public collection<T extends object>(collectionPath: string): CollectionOperationsInstance<T> {
         return new CollectionOperations<T>(removeFirstAndLastSlash(collectionPath), this.databaseId)
     }
 }
@@ -79,8 +78,7 @@ class DocOperations<T extends object> {
 }
 
 
-class CollectionOperations<T extends object> {
-
+class CollectionOperations<T extends object> implements CollectionOperationsInstance<T> {
     public whereQueries: {
         field: string,
         op: WhereFilterOpREST,
@@ -204,7 +202,7 @@ export default class RestFirestoreInstance {
      * Initializes the Firebase Rest Admin SDK.
      * @returns {FirestoreOperations} A new instance of the FirestoreOperations class.
      */
-    async initApp() {
+    async firestore() {
         const appInstance = await initFirebaseRest(this.initialValue);
         return new FirestoreOperations(appInstance.databaseId);
     }
