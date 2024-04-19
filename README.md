@@ -3,7 +3,7 @@
 npm i firebase-admin-rest@latest 
 ```
 
-### **Typesafe Firebase Admin REST API wrapper that works on Vercel Edge functions, Bun, Cloudflare workers, Deno or any JS runtime.**
+### **Tiny Typesafe Firebase Admin REST API wrapper that works on Vercel Edge functions, Bun, Cloudflare workers, Deno or any JS runtime.**
 
 ### Background:
 - Provide a common SDK that can be used in any JS environment without problems unlike the firebase-admin sdk.
