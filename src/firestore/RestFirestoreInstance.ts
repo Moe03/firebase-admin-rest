@@ -6,10 +6,6 @@ import { orderOpToRest, removeFirstAndLastSlash, whereOpToRest } from "./utils";
 import { setDocRest } from "./setDoc";
 import { DJDeleteREST, DocsToJSONRest, JSONtoDocsRest } from "./helper_utils/DJUtils";
 
-// export default function initFirestoreInstance<T = any>(initialValue?: InitFirebaseAdminInput): RestFirestoreInstance<T> {
-//     return new RestFirestoreInstance(initialValue);
-// }
-
 /**
  * Nested class for operations related to documents.
  */
@@ -18,11 +14,23 @@ class FirestoreOperations {
     constructor(public databaseId: string) {
         return this;
     }
-
+    /**
+    * Update a document in Firestore.
+    * @param {Object} docPath - Additional options for the operation.
+    * @template T - The type of the document data.
+    * @returns {DocOperations<T>} Document operations instance.
+    */
     public doc<T extends object>(docPath: string): DocOperations<T> {
         return new DocOperations<T>(removeFirstAndLastSlash(docPath), this.databaseId);
     }
 
+    /**
+    * Update a document in Firestore.
+    * @param {T} data - The data to set in the document.
+    * @param {Object} options - Additional options for the operation.
+    * @param {boolean} options.merge - Whether to merge the data with the existing document. Defaults to false.
+    * @returns {Promise<CompatibleDocument<T>>} A Promise that resolves to a response object containing fetched Firestore document.
+    */
     public collection<T extends object>(collectionPath: string): CollectionOperationsInstance<T> {
         return new CollectionOperations<T>(removeFirstAndLastSlash(collectionPath), this.databaseId)
     }
@@ -67,6 +75,7 @@ class DocOperations<T extends object> {
 
     /**
     * Runs a query to get the document.
+    * @return {Promise<GetDocumentRes<T>>} A Promise that resolves to a response object containing fetched Firestore document.
     */
     public async get(): Promise<GetDocumentRes<T>> {
         const doc = await getDocRest(this.docPath, {
@@ -102,6 +111,12 @@ class CollectionOperations<T extends object> implements CollectionOperationsInst
     }
 
 
+    /**
+    * Limit query results.
+    * @param {string} field - The field to order the query by.
+    * @param {WhereFilterOp} op - The direction to order the query by.
+    * @param {any} value - The value to compare the field to.
+    */
     public where(field: string, op: WhereFilterOp, value: any) {
         this.whereQueries.push({
             field: field,
@@ -111,6 +126,11 @@ class CollectionOperations<T extends object> implements CollectionOperationsInst
         return this;
     }
 
+    /**
+    * Limit query results.
+    * @param {string} field - The field to order the query by.
+    * @param {OrderByDirection} direction - The direction to order the query by.
+    */
     public orderBy(field: string, direction: OrderByDirection) {
         this.orderByQuery = {
             field: field,
@@ -119,11 +139,18 @@ class CollectionOperations<T extends object> implements CollectionOperationsInst
         return this;
     }
 
+    /**
+    * Limit query results.
+    * @param {number} limit - The number of documents to limit the query to.
+    */
     public limit(limit: number) {
         this.limitQuery = limit;
         return this;
     }
 
+    /**
+    * Deletes an ENTIRE COLLECTION.
+    */
     public async delete() {
         // Implement delete operation here
         const deleteCollectionRes = await DJDeleteREST(this.collectionPath, {
@@ -132,6 +159,10 @@ class CollectionOperations<T extends object> implements CollectionOperationsInst
         return deleteCollectionRes;
     }
 
+    /**
+    * Page through the collection.
+    * @param {number} page - The page number to retrieve.
+    */
     public page(page: number) {
         // Implement pagination here
         this.pageQuery = page;
@@ -139,7 +170,7 @@ class CollectionOperations<T extends object> implements CollectionOperationsInst
     }
 
     /**
-    * !! WARNING: Experimental feature, use with caution !!
+    * !!WARNING: Experimental feature, use with caution !!
     * This converts a collection to a JSON string to save bandwidth, to store analytics for example without querying hundreds or thousands of documents.
     * Always outputs an array similar to the collection.get() operation.
     */
@@ -152,7 +183,7 @@ class CollectionOperations<T extends object> implements CollectionOperationsInst
     }
 
     /**
-   * !! WARNING: Experimental feature, use with caution !!
+   * !!WARNING: Experimental feature, use with caution !!
    * This converts a collection to a JSON string to save bandwidth, to store analytics for example without querying hundreds or thousands of documents.
    * Always outputs an array similar to the collection.get() operation.
    * @param {T[]} data - The array to convert to store in the collection with the DB engine.
@@ -164,7 +195,10 @@ class CollectionOperations<T extends object> implements CollectionOperationsInst
         return writeRes;
     }
 
-    // Define methods for document operations here
+    /**
+     * Get documents from the collection.
+     * @return {Promise<GetDocumentsRes<T>>} A Promise that resolves to a response object containing fetched Firestore document.
+     */
     public async get(): Promise<GetDocumentsRes<T>> {
         let docsRes;
         // if (!this.whereQueries.length && !this.orderByQuery.field) {
