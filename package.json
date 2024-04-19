@@ -14,13 +14,13 @@
   ],
   "keywords": [
     "firebase",
-    "firebase rest",
-    "firebase admin",
-    "firebase edge",
-    "firebase bun",
-    "firebase workers",
-    "firebase cloudflare",
-    "firebase deno"
+    "firebase rest wrapper",
+    "firebase admin edge",
+    "edge runtime",
+    "bun",
+    "workers",
+    "cloudflare",
+    "deno"
   ],
   "license": "MIT",
   "homepage": "https://github.com/Moe03/firebase-admin-rest#readme",
