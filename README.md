@@ -1,3 +1,8 @@
+### EXPERIMENTAL -- PLEASE UPDATE REGULARLY 
+```bash
+npm i firebase-admin-rest@latest 
+```
+
 ### **Typesafe Firebase Admin REST API wrapper that works on Vercel Edge functions, Bun, Cloudflare workers, Deno or any JS runtime.**
 
 ### Background:
