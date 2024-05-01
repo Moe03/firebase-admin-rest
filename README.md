@@ -19,7 +19,7 @@ const docs = await db.collection(`users`).limit(10).get()
 
 // firebase-admin-rest
 const db = await initFirebaseRest().firestore();
-const docRef = await db.doc<User>(`users`).limit(10).page(2).get(); 
+const docs = await db.collection<User>(`users`).limit(10).page(2).get(); 
 ```
 Typesafe + helper functions like pagination!
 
