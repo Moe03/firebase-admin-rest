@@ -1,10 +1,18 @@
 {
   "compilerOptions": {
+    "lib": [
+      "es2015",
+      "es2016",
+      "es2017",
+      "es2018",
+      "es2019",
+      "es2020",
+      "esnext"
+    ],
     "target": "ESNext",
-    "module": "esnext",
+    "module": "NodeNext",
     "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
     "skipLibCheck": true,
     "noUnusedLocals": true,
     "noImplicitAny": true,

@@ -61,7 +61,7 @@ export interface FirebaseAdminConfig {
 }
 
 export interface InitFirebaseAdminInput {
-    serviceAccount: FirebaseAdminConfig
+    serviceAccount?: FirebaseAdminConfig
     databaseId?: string;
     ignoreUndefinedValues?: boolean;
 }

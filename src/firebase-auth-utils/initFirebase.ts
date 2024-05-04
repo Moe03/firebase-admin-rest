@@ -1,4 +1,4 @@
-import * as jwt from '@tsndr/cloudflare-worker-jwt'
+// import * as jwt from '@tsndr/cloudflare-worker-jwt'
 import { InitFirebaseAdminInput, InitFirebaseAdminOuput } from '../types';
 import { testFbCredentials } from './testFbCredentials';
 
@@ -21,10 +21,11 @@ export async function generateJWT(input?: {
         private_key_id?: string;
     }
 }) {
+    const { sign } = await import('@tsndr/cloudflare-worker-jwt');
     const serviceAccount = input?.serviceAccount || JSON.parse(process.env.GCLOUD_SERVICE_ACCOUNT || '{}');
     if (!serviceAccount) throw new Error('SERVICE_ACCOUNT not found in environment variables');
     const privateKey = serviceAccount.private_key;
-    const signedJwt = await jwt.sign(
+    const signedJwt = await sign(
         {
             iss: serviceAccount.client_email,
             sub: serviceAccount.client_email,
@@ -55,18 +56,18 @@ export async function generateJWT(input?: {
  * @throws Error if the project_id is not provided in the serviceAccount.
  */
 export async function initFirebaseRest(options?: InitFirebaseAdminInput): Promise<InitFirebaseAdminOuput> {
-    if (options?.serviceAccount === undefined) {
-        options = {
-            serviceAccount: {
-                client_email: process.env.FAR_CLIENT_EMAIL || '',
-                project_id: process.env.FAR_PROJECT_ID || '',
-                private_key: process.env.FAR_PRIVATE_KEY || ''
-            }
+    // if (options?.serviceAccount === undefined || !options?.serviceAccount) {
+    options = {
+        serviceAccount: {
+            client_email: process.env.FAR_CLIENT_EMAIL || options?.serviceAccount?.client_email || '',
+            project_id: process.env.FAR_PROJECT_ID || options?.serviceAccount?.project_id || '',
+            private_key: process.env.FAR_PRIVATE_KEY || options?.serviceAccount?.private_key || '',
         }
     }
-    if (!options.serviceAccount.project_id) throw new Error('project_id, client_email, private_key are required in serviceAccount.');
-    if (!options.serviceAccount.client_email) throw new Error('project_id, client_email, private_key are required in serviceAccount.');
-    if (!options.serviceAccount.private_key) throw new Error('project_id, client_email, private_key are required in serviceAccount.');
+    // }
+    if (!options.serviceAccount?.project_id) throw new Error('project_id, client_email, private_key are required in serviceAccount.');
+    if (!options.serviceAccount?.client_email) throw new Error('project_id, client_email, private_key are required in serviceAccount.');
+    if (!options.serviceAccount?.private_key) throw new Error('project_id, client_email, private_key are required in serviceAccount.');
     const accessToken = await generateJWT({ serviceAccount: options.serviceAccount });
     process.env.FIREBASE_REST_ACCESS_TOKEN = accessToken;
     process.env.FIREBASE_REST_PROJECT_ID = options.serviceAccount.project_id;
