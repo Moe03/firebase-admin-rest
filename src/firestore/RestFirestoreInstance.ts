@@ -5,6 +5,7 @@ import { queryDocsRest } from "./queryDocs";
 import { orderOpToRest, removeFirstAndLastSlash, whereOpToRest } from "./utils";
 import { setDocRest } from "./setDoc";
 import { DJDeleteREST, DocsToJSONRest, JSONtoDocsRest } from "./helper_utils/DJUtils";
+import { deleteDocRest } from "./deleteDoc";
 
 /**
  * Nested class for operations related to documents.
@@ -83,6 +84,17 @@ class DocOperations<T extends object> {
             debug: false
         });
         return doc;
+    }
+
+    /**
+     * Deletes a document from Firestore.
+     * @return {Promise<GetDocumentRes<T>>} A Promise that resolves to a response object containing fetched Firestore document.
+     * @param {Object} options - Additional options for the operation.
+     */
+    public async delete(): Promise<void> {
+        await deleteDocRest(this.docPath, {
+            db: this.databaseId,
+        });
     }
 }
 

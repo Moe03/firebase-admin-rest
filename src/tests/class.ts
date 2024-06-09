@@ -4,9 +4,9 @@ import { initFirebaseRest } from "../admin";
 // var crypto = require('crypto-js');
 async function getDoc() {
     const db = await initFirebaseRest().firestore();
-    const docRef = await db.doc(`users/test_1`).get();
+    const docRef = await db.collection(`users`).limit(1).get();
 
-    console.log(docRef.data())
+    console.log(docRef.docs[0].data())
 }
 
 // getDocs example
