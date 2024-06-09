@@ -91,10 +91,11 @@ class DocOperations<T extends object> {
      * @return {Promise<GetDocumentRes<T>>} A Promise that resolves to a response object containing fetched Firestore document.
      * @param {Object} options - Additional options for the operation.
      */
-    public async delete(): Promise<void> {
-        await deleteDocRest(this.docPath, {
+    public async delete(): Promise<any> {
+        const response = await deleteDocRest(this.docPath, {
             db: this.databaseId,
         });
+        return response;
     }
 }
 

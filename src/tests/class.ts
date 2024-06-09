@@ -9,6 +9,16 @@ async function getDoc() {
     console.log(docRef.docs[0].data())
 }
 
+async function deleteDoc() {
+
+    const db = await initFirebaseRest().firestore();
+    const docRef = await db.collection(`users`).limit(1).get();
+
+    console.log(docRef.docs[0].data())
+    const res = await db.doc(`users/${docRef.docs[0].id}`).delete()
+    console.log(res)
+}
+
 // getDocs example
 async function getDocs() {
     const db = await initFirebaseRest().firestore();
@@ -90,4 +100,4 @@ async function collectionToJson() {
     console.log(docsRef.docReads)
 }
 
-getDoc()
+deleteDoc()
