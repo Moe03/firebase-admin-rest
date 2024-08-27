@@ -124,45 +124,6 @@ async function queryDocs3() {
 }
 ```
 
-### Opinionated helper functions (Experimental)
-- Sometimes you have a big amount of data that you need to store somehow but firestore is not quite enough, and buckets are an overkill.. 
-- We have created a helper function to reserve a collection to act as a huge document store *(infinite in theory)* where every document read will get (950MB - 1MB) of JSON data.
-- This fixes the limits with firestore and at the same time prevents us from using buckets since bandwidth can get expensive quickly.
-
-#### Big JSON to Collection
-```ts
-async function collectionToDocs() {
-    const db = await initFirebaseRest().firestore();
-    const docsRef = await db.collection<any>('big_data').todocs(
-        Array(50_000).fill(null).map((item, index) => {
-            return {
-                id: `${Math.random().toString(36).substring(7)}`,
-                name: `John Doe ${index}`,
-                age: 30,
-                email: `atoot@gmail.com`,
-            }
-        })
-    );
-    
-    console.log(`Done`, docsRef)
-} 
-collectionToDocs()
-```
-#### Collection to Big JSON
-```ts
-async function collectionToJson(){
-    const db = await initFirebaseRest().firestore();
-    const docsRef = await db.collection(`big_data`).tojson();
-
-    // this will return a JSON object with the same structure as the collection
-    // each document read has 1MB of data, so this is a good way to store large data without querying hundreds or thousands of documents
-    // storing on a bucket is also an option, but the bandwidth is expensive and will add up
-    console.log(docsRef.docReads)
-}
-
-collectionToJson()
-```
-
 ### Package size
 ![image](https://github.com/Moe03/firebase-admin-rest/assets/56455612/eca03b8e-1e80-45ab-92ac-6c3020937d8a)
 
