@@ -1,3 +1,5 @@
+NOT ACTIVELY MAINTAINED.
+
 ### EXPERIMENTAL -- PLEASE UPDATE REGULARLY 
 ```bash
 npm i firebase-admin-rest@latest 
@@ -127,7 +129,7 @@ async function queryDocs3() {
 ### Package size
 ![image](https://github.com/Moe03/firebase-admin-rest/assets/56455612/eca03b8e-1e80-45ab-92ac-6c3020937d8a)
 
-Actively maintained by https://github.com/Moe03 since I'm using it all the time on edge functions, cloudflare workers and will definitely support more firebase products soon.
+NOT Actively maintained temporary solution till main firebase sdk team creates a lite version or something that works with any JS env.
 
 Contribute however you'd like :)
 
