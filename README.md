@@ -1,5 +1,7 @@
 NOT ACTIVELY MAINTAINED.
 
+### If you want to collab or sponsor this please dm @moe_03 on discord.
+
 ### EXPERIMENTAL -- PLEASE UPDATE REGULARLY 
 ```bash
 npm i firebase-admin-rest@latest 
